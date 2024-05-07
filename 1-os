@@ -1,0 +1,51 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<limits.h>
+
+// Function to find the index of the nearest track from the current head position
+int findNearestTrack(int tracks[], int n, int head) {
+    int minDistance = INT_MAX;
+    int index = -1;
+    for(int i = 0; i < n; i++) {
+        if(abs(tracks[i] - head) < minDistance) {
+            minDistance = abs(tracks[i] - head);
+            index = i;
+        }
+    }
+    return index;
+}
+
+// Function to perform SSTF scheduling
+void sstf(int tracks[], int n, int head) {
+    int totalSeek = 0;
+    int currentTrack = head;
+    printf("Seek Sequence: ");
+    for(int i = 0; i < n; i++) {
+        int nearestTrackIndex = findNearestTrack(tracks, n, currentTrack);
+        totalSeek += abs(tracks[nearestTrackIndex] - currentTrack);
+        printf("%d ", tracks[nearestTrackIndex]);
+        currentTrack = tracks[nearestTrackIndex];
+        tracks[nearestTrackIndex] = INT_MAX; // Marking the track as visited
+    }
+    printf("\nTotal Seek Time: %d\n", totalSeek);
+}
+
+int main() {
+    int n;
+    printf("Enter the number of tracks: ");
+    scanf("%d", &n);
+    
+    int tracks[n];
+    printf("Enter the track positions:\n");
+    for(int i = 0; i < n; i++) {
+        scanf("%d", &tracks[i]);
+    }
+    
+    int head;
+    printf("Enter the initial head position: ");
+    scanf("%d", &head);
+    
+    sstf(tracks, n, head);
+    
+    return 0;
+}
